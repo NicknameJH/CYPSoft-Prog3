@@ -1,18 +1,60 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="style.css">
-
-    <!-- Enlaces a React, ReactDOM y Babel -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda con React</title>
+        <!-- Enlaces que necesito para que react funcione -->
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="main.jsx" type="text/babel"></script>
-    <title>TP1</title>
+    <link rel="stylesheet" href="Style.css">
 </head>
+
 <body>
-    <!-- Reemplazar TITLE nombre y apellido y borrar esta línea -->
-    <div id="root"></div>
+    <h1>Agenda Romano Jhonatan</h1>
+
+    <div id = "root">
+        <!-- Esto es para mostrar la lista de contactos hecha en react, lista-contactos es el nombre
+        que tiene el elemento para que react lo pueda detectar y mostrar-->
+        <ul id = "lista-contactos"></ul>
+    </div>
+
+
+    <script type = "text/babel">
+
+        //La lista con los objetos
+        const contactos = [
+    { id: 1, nombre: 'Juan', apellido: 'Pérez', telefono: '381 000 0000' },
+    { id: 2, nombre: 'Ana', apellido: 'Gómez', telefono: '382 111 1111' },
+    { id: 3, nombre: 'Pedro', apellido: 'García', telefono: '383 222 2222' },
+    { id: 4, nombre: 'Laura', apellido: 'Fernández', telefono: '384 333 3333' },
+    { id: 5, nombre: 'María', apellido: 'López', telefono: '385 444 4444' },
+    { id: 6, nombre: 'Carlos', apellido: 'Martínez', telefono: '386 555 5555' },
+    { id: 7, nombre: 'Elena', apellido: 'Rodríguez', telefono: '387 666 6666' },
+    { id: 8, nombre: 'Manuel', apellido: 'Sánchez', telefono: '388 777 7777' },
+    { id: 9, nombre: 'Carmen', apellido: 'González', telefono: '389 888 8888' },
+    { id: 10, nombre: 'Javier', apellido: 'Díaz', telefono: '390 999 9999' },
+]
+
+
+
+        //Esto desestructura la lista usando esa flecha de ahí, para poder mostrar el objeto mas adelante
+        const Contacto = ({contacto: {nombre, apellido, telefono}}) => {
+            return <li>{nombre} {apellido}</li>;
+        }
+
+        //Esto busca el elemento que tenga ese id, es para poner adentro de ese elemento la lista
+        const listaContactos = document.getElementById("lista-contactos");
+
+
+        //Esto recorre la lista, creando los elementos <li></li> y el el medio crea el contenido usando ese li.text.Content
+        contactos.forEach(Contacto => {
+            const li = document.createElement('li');
+            li.textContent = `Nombre: ${Contacto.nombre} | Apellido: ${Contacto.apellido} | Nro de Telefono: ${Contacto.telefono}`;
+            listaContactos.appendChild(li);
+        });
+
+    </script>
 </body>
 </html>
