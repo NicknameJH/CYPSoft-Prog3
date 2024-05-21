@@ -4,55 +4,71 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agenda con React</title>
-    <!-- Enlaces que necesito para que react funcione -->
     <link rel="stylesheet" href="Style.css">
-    <!-- Incluye el archivo JavaScript transpilado -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script> 
-    <script src="main.jsx" type="text/babel"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
 </head>
 <body>
     <h1>Agenda Romano Jhonatan</h1>
-    <div id="root">
-        <!-- Esto es para mostrar la lista de contactos hecha en react -->
-        <ul id="lista-contactos"></ul>
-    </div>
+    <div id="root"></div>
 
     <script type="text/babel">
-        
-//La lista con los objetos
+        // Lista de contactos inicial
+        const contactos = [
+            { id: 1, nombre: 'Juan', apellido: 'Pérez', telefono: '381 000 0000' },
+            { id: 2, nombre: 'Ana', apellido: 'Gómez', telefono: '382 111 1111' },
+            { id: 3, nombre: 'Pedro', apellido: 'García', telefono: '383 222 2222' },
+            { id: 4, nombre: 'Laura', apellido: 'Fernández', telefono: '384 333 3333' },
+            { id: 5, nombre: 'María', apellido: 'López', telefono: '385 444 4444' },
+            { id: 6, nombre: 'Carlos', apellido: 'Martínez', telefono: '386 555 5555' },
+            { id: 7, nombre: 'Elena', apellido: 'Rodríguez', telefono: '387 666 6666' },
+            { id: 8, nombre: 'Manuel', apellido: 'Sánchez', telefono: '388 777 7777' },
+            { id: 9, nombre: 'Carmen', apellido: 'González', telefono: '389 888 8888' },
+            { id: 10, nombre: 'Javier', apellido: 'Díaz', telefono: '390 999 9999' },
+        ];
 
-const contactos = [
-    { id: 1, nombre: 'Juan', apellido: 'Pérez', telefono: '381 000 0000' },
-    { id: 2, nombre: 'Ana', apellido: 'Gómez', telefono: '382 111 1111' },
-    { id: 3, nombre: 'Pedro', apellido: 'García', telefono: '383 222 2222' },
-    { id: 4, nombre: 'Laura', apellido: 'Fernández', telefono: '384 333 3333' },
-    { id: 5, nombre: 'María', apellido: 'López', telefono: '385 444 4444' },
-    { id: 6, nombre: 'Carlos', apellido: 'Martínez', telefono: '386 555 5555' },
-    { id: 7, nombre: 'Elena', apellido: 'Rodríguez', telefono: '387 666 6666' },
-    { id: 8, nombre: 'Manuel', apellido: 'Sánchez', telefono: '388 777 7777' },
-    { id: 9, nombre: 'Carmen', apellido: 'González', telefono: '389 888 8888' },
-    { id: 10, nombre: 'Javier', apellido: 'Díaz', telefono: '390 999 9999' },
-]
+        // Componente Contacto: representa un contacto individual en la lista, el onToggle
+        const Contacto = ({ contacto, onToggleFavorite }) => {
+            return (
+                <li onClick={() => onToggleFavorite(contacto.id)}>
+                    {contacto.nombre} {contacto.apellido} {contacto.isFavorite && '⭐'}
+                    <div>{contacto.telefono}</div>
+                </li>
+            );
+        };
 
+        // Componente principal de la aplicación
+        const App = () => {
+            // Estado de la lista de contactos
+            const [contactList, setContactList] = React.useState(contactos);
 
+            // Función para alternar el estado de favorito de un contacto
+            const toggleFavorite = (id) => {
+                const updatedContacts = contactList.map(contact => 
+                    contact.id === id ? { ...contact, isFavorite: !contact.isFavorite } : contact
+                );
+                setContactList(updatedContacts);
+            };
 
-        //Esto desestructura la lista usando esa flecha de ahí, para poder mostrar el objeto mas adelante
-        const Contacto = ({contacto: {nombre, apellido, telefono}}) => {
-            return <li>{nombre} {apellido}</li>;
-        }
+            // Ordenar contactos: favoritos primero y luego alfabéticamente
+            const sortedContacts = [...contactList].sort((a, b) => {
+                if (a.isFavorite && !b.isFavorite) return -1;
+                if (!a.isFavorite && b.isFavorite) return 1;
+                return a.nombre.localeCompare(b.nombre);
+            });
 
-        //Esto busca el elemento que tenga ese id, es para poner adentro de ese elemento la lista
-        const listaContactos = document.getElementById("lista-contactos");
+            return (
+                <ul>
+                    {sortedContacts.map(contacto => (
+                        <Contacto key={contacto.id} contacto={contacto} onToggleFavorite={toggleFavorite} />
+                    ))}
+                </ul>
+            );
+        };
 
-
-        //Esto recorre la lista, creando los elementos <li></li> y el el medio crea el contenido usando ese li.text.Content
-        contactos.forEach(Contacto => {
-            const li = document.createElement('li');
-            li.textContent = `Nombre: ${Contacto.nombre} | Apellido: ${Contacto.apellido} | Nro de Telefono: ${Contacto.telefono}`;
-            listaContactos.appendChild(li);
-        });
-
+        // Renderizar el componente App dentro del div con id 'root'
+        ReactDOM.render(<App />, document.getElementById('root'));
     </script>
 </body>
 </html>
